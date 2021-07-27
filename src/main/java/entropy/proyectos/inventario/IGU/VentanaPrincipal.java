@@ -10,6 +10,7 @@ import entropy.proyectos.inventario.Facade.ProductoFacade;
 import entropy.proyectos.inventario.excepciones.BaseDatosException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -21,11 +22,11 @@ import javax.swing.event.ListSelectionEvent;
 public class VentanaPrincipal extends javax.swing.JFrame {
 
     private List<Producto> datos = new ArrayList<>();
-    private ProductoFacade pf = new ProductoFacade();
+    private final ProductoFacade pf = new ProductoFacade();
     private LibretaTableModel tableModel;
-    /**
-     * Creates new form VentanaPrincipal
-     */
+    private Long idMod;
+    
+    
     public VentanaPrincipal() {
         initComponents();
         iniciarInventario();
@@ -51,6 +52,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnAñadirProducto = new javax.swing.JButton();
         btnEliminarProducto = new javax.swing.JButton();
         btnModificarProducto = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         Textos = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -104,13 +106,39 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Botones.setBackground(new java.awt.Color(181, 181, 76));
 
         btnAñadirProducto.setText("Añadir Producto");
+        btnAñadirProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAñadirProductoActionPerformed(evt);
+            }
+        });
         Botones.add(btnAñadirProducto);
 
         btnEliminarProducto.setText("Elliminar Producto");
+        btnEliminarProducto.setEnabled(false);
+        btnEliminarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarProductoActionPerformed(evt);
+            }
+        });
         Botones.add(btnEliminarProducto);
 
         btnModificarProducto.setText("Modificar Producto");
+        btnModificarProducto.setEnabled(false);
+        btnModificarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarProductoActionPerformed(evt);
+            }
+        });
         Botones.add(btnModificarProducto);
+
+        btnGuardar.setText("Guardar Mod");
+        btnGuardar.setEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+        Botones.add(btnGuardar);
 
         Formulario.add(Botones, java.awt.BorderLayout.PAGE_END);
 
@@ -135,7 +163,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtRef)
-                    .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE))
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -173,6 +201,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jLabel9.setText("Total: ");
 
+        txtTotal.setEnabled(false);
+
         jLabel10.setText("Unidad");
 
         jLabel11.setText("Docena");
@@ -188,7 +218,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 3, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -212,21 +242,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addGap(10, 10, 10)
-                                .addComponent(txtS, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                                .addComponent(txtS))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtL)))
                         .addGap(36, 36, 36)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtXL, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtM)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addGap(7, 7, 7)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtXL, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                            .addComponent(txtM))
                         .addContainerGap())))
         );
         jPanel4Layout.setVerticalGroup(
@@ -266,9 +294,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         TextosLayout.setHorizontalGroup(
             TextosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TextosLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         TextosLayout.setVerticalGroup(
             TextosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,7 +334,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -324,6 +354,160 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAñadirProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirProductoActionPerformed
+        
+        Producto producto;
+
+        try {
+            
+            Integer S = Integer.valueOf(txtS.getText());
+            Integer M = Integer.valueOf(txtM.getText());
+            Integer L = Integer.valueOf(txtL.getText());
+            Integer XL = Integer.valueOf(txtXL.getText());
+            Integer total = S+M+L+XL;
+                    
+            producto = new Producto(Long.valueOf(txtRef.getText()),
+                                    txtDescripcion.getText(),
+                                    Integer.valueOf(txtUnidad.getText()),
+                                    Integer.valueOf(txtDocena.getText()),
+                                    Integer.valueOf(txtPorMayor.getText()),
+                                    S,M,L,XL,total);
+            
+            pf.crearProducto(producto);
+            actualizarTabla();
+            limpiarCampos();
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(rootPane, "Ingrese datos correctos");
+        } catch (BaseDatosException e) {
+            JOptionPane.showMessageDialog(rootPane, "Error con la base");
+        }
+
+    }//GEN-LAST:event_btnAñadirProductoActionPerformed
+
+    private void btnModificarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarProductoActionPerformed
+        
+        int row = tblInventario.getSelectedRow();
+        
+        try {
+            
+            Producto producto = tableModel.getDato(row);
+
+            txtRef.setText(producto.getRef().toString());
+            txtRef.setEnabled(false);
+            txtDescripcion.setText(producto.getDescripcion());
+            txtUnidad.setText(producto.getPrecioUnidad().toString());
+            txtDocena.setText(producto.getPrecioDocena().toString());
+            txtPorMayor.setText(producto.getPrecioMayor().toString());
+            txtS.setText(producto.getExistenciaS().toString());
+            txtM.setText(producto.getExistenciaM().toString());
+            txtL.setText(producto.getExistenciaL().toString());
+            txtXL.setText(producto.getExistenciaXL().toString());
+            txtTotal.setText(producto.getExistenciaTotal().toString());
+            
+            btnGuardar.setEnabled(true);
+            
+            idMod = producto.getRef();
+            
+        } catch (Exception e) {
+        }
+        
+    }//GEN-LAST:event_btnModificarProductoActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        
+        int row = tblInventario.getSelectedRow();
+        Producto producto =  tableModel.getDato(row);
+        
+        if(Objects.equals(producto.getRef(), idMod)) {
+            try {
+                
+                Integer S = Integer.valueOf(txtS.getText());
+                Integer M = Integer.valueOf(txtM.getText());
+                Integer L = Integer.valueOf(txtL.getText());
+                Integer XL = Integer.valueOf(txtXL.getText());
+                Integer total = S + M + L + XL;
+                
+                producto.setDescripcion(txtDescripcion.getText());
+                producto.setPrecioUnidad(Integer.valueOf(txtUnidad.getText()));
+                producto.setPrecioDocena(Integer.valueOf(txtDocena.getText()));
+                producto.setPrecioMayor(Integer.valueOf(txtPorMayor.getText()));
+                producto.setExistenciaS(S);
+                producto.setExistenciaM(M);
+                producto.setExistenciaL(L);
+                producto.setExistenciaXL(XL);
+                producto.setExistenciaTotal(total);
+                
+                pf.modificarProducto(producto);
+                actualizarTabla();
+                limpiarCampos();
+  
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(rootPane, "Ingrese datos correctos");
+            } catch (BaseDatosException e) {
+                JOptionPane.showMessageDialog(rootPane, "Error con la base");
+            }
+            
+        } else{
+            JOptionPane.showMessageDialog(this, "Seleccione en la tabla el "
+                                             + "producto correcto a modificar");
+        }
+        
+        
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
+       
+        int row = tblInventario.getSelectedRow();
+        
+        if(row != -1){
+            if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this,
+                                    "¿Está seguro que desea eliminar?")){
+                
+                Producto producto = tableModel.getDato(row);
+                
+                try {
+                    pf.eliminarProducto(producto);
+                    actualizarTabla();
+                } catch (BaseDatosException ex) {
+                  JOptionPane.showMessageDialog(this,"Error: "+ex.getMessage());
+                }
+
+                JOptionPane.showMessageDialog(this, 
+                        "Producto eliminado exitosamente", getTitle(), 
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+    }//GEN-LAST:event_btnEliminarProductoActionPerformed
+
+    
+    private void actualizarTabla() throws BaseDatosException {
+        
+        datos = pf.cargarProductos();
+        tableModel.setDatos(datos);
+        
+    }
+    
+    private void limpiarCampos() {
+        
+        txtRef.setEnabled(true);
+        txtRef.setText("");
+        txtDescripcion.setText("");
+        txtUnidad.setText("");
+        txtDocena.setText("");
+        txtPorMayor.setText("");
+        txtS.setText("");
+        txtM.setText("");
+        txtL.setText("");
+        txtXL.setText("");
+        txtTotal.setText("");
+        
+        btnGuardar.setEnabled(false);
+        idMod = null;
+        
+    }
+    
     private void iniciarInventario() {
         
          try {
@@ -389,6 +573,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel Textos;
     private javax.swing.JButton btnAñadirProducto;
     private javax.swing.JButton btnEliminarProducto;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificarProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

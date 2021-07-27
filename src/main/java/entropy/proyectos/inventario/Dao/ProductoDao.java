@@ -90,7 +90,7 @@ public class ProductoDao {
             et = em.getTransaction();
             et.begin();
             
-            em.remove(producto);
+            em.remove(em.contains(producto) ? producto : em.merge(producto));
             
             et.commit();
             
