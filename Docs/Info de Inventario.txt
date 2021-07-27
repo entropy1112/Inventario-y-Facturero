@@ -1,0 +1,12 @@
+Proyecto de inventario
+
+Se busca crear una plataforma que permita gestionar un inventario de productos
+
+Los productos necesitan la siguiente información
+ - Referencia
+ - Descripcion
+ - Precios segun cantidad
+ - Existencias por tallas y total
+
+El inventario será una lista de los productos creados en la que se pueda acceder
+a su información y gestionarla

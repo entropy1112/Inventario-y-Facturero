@@ -1,0 +1,7 @@
+entropy\proyectos\inventario\IGU\VentanaPrincipal.class
+entropy\proyectos\inventario\Dao\ProductoDao.class
+entropy\proyectos\inventario\Facade\ProductoFacade.class
+entropy\proyectos\inventario\IGU\VentanaPrincipal$1.class
+entropy\proyectos\inventario\Entidades\Producto.class
+entropy\proyectos\inventario\excepciones\BaseDatosException.class
+entropy\proyectos\inventario\IGU\LibretaTableModel.class

@@ -1,0 +1,19 @@
+Proyecto de facturero
+
+Se busca crear un facturero, que almacene información sobre clientes, facturas,
+ventas y las relaciones que hayan entre estos datos.
+
+Sobre las facturas se necesita guardar la siguiente información:
+ - codigo de factura
+ - cliente
+ - Lista de productos
+ - valor de la factura
+
+Sobre los clientes se necesita guardar la siguiente información
+ - nombre
+ - codigos de facturas a su nombre
+ - direccion (opcional)
+ - telefono (opcional)
+
+Sobre las ventas se necesita guardar la siguiente información
+ - lista de facturas
